@@ -18,20 +18,15 @@ def relaxILP(num_requests, num_models, num_locations, requests, models, cloudlet
 
     a_jk = {(j, k): accuracy_dict[j][k] for j, k in x_jk}
     d_jk_inf = {(j, k): Delay.get_inference_delay(models[k], requests[j], cloudlets) for j, k in x_jk}
-
     d_jk_queue = {(j, k): Delay.get_queue_delay(requests[j], cloudlets) for j, k in x_jk}
-
     d_jk_trans = {(j, k): Delay.get_trans_delay(models[k], requests[j]) for j, k in x_jk}
-
-    c_jk_inf = {(j, k): Cost.get_inference_cost(models[k], requests[j], cloudlets, Delay.get_inference_delay(models[k], requests[j], cloudlets)) for j, k in x_jk}
-
     c_jk_inf = {(j, k): Cost.get_inference_cost(models[k], requests[j], cloudlets,
                                                 Delay.get_inference_delay(models[k], requests[j], cloudlets)) for j, k in x_jk}
 
     d_jkl_sh = {(j, k, l): Delay.get_pulling_delay_sh(models[k], requests[j], locations[l], Graph) for j, k, l in y_jkl_sh}
     d_jkl_re = {(j, k, l): Delay.get_pulling_delay_re(models[k], requests[j], locations[l], Graph) for j, k, l in y_jkl_re}
 
-    m = gp.Model("ILP")
+    m = gp.Model("NBS")
 
     x = m.addVars(((j,k) for j in range(1, num_requests + 1) for k in range(1, num_models + 1)), lb=0.0, ub=1.0, vtype=GRB.CONTINUOUS, name="ModelSelection")
 
@@ -66,12 +61,12 @@ def relaxILP(num_requests, num_models, num_locations, requests, models, cloudlet
 
     m.addConstrs((q[(j, k, l)] >= y_re[(j, k, l)] for j in range(1, num_requests + 1) for k in range(1, num_models + 1) for l in lre[k]), name='variable_q')
 
+    # Budget and accuracy constraints based on NBS
     budgetcost = gp.quicksum(requests[j]['cost_budget'] for j in range(1, num_requests + 1))
-
     infcost = gp.quicksum(x[(j, k)] * c_jk_inf[(j, k)] for k in range(1, num_models + 1) for j in range(1, num_requests+1))
-
     decost = gp.quicksum(cloudlets[requests[j]['home_cloudlet_id']]['trans_power'] * (max_d + gp.quicksum(x[(j,k)] * d_jk_trans[(j,k)] for k in range(1, num_models + 1))) for j in range(1, num_requests + 1))
 
+    # NBG objective: balancing cost efficiency and accuracy
     objectcj = budgetcost - infcost - decost
 
     m.addConstrs((gp.quicksum(x[(j, k)] * alpha * (models[k]['shareable'] + models[k]['remain']) for k in range(1, num_models + 1)) <= cloudlets[requests[j]['home_cloudlet_id']]['computing_capacity'] for j in range(1, num_requests + 1)), name='capacity')
@@ -83,11 +78,12 @@ def relaxILP(num_requests, num_models, num_locations, requests, models, cloudlet
 
     objectaj = infacc - budgetacc
 
+    # Set the Nash Bargaining objective
     m.setObjective(xi * objectcj + objectaj, GRB.MAXIMIZE)
 
     m.optimize()
 
-    print("Objective value--NBSilp: ", m.ObjVal)
+    print("Objective value--NBS: ", m.ObjVal)
 
     accuracy = 0
     delay = 0

@@ -8,5 +8,7 @@ def initialize_metrics():
         'delay': [],
         'cost': [],
         'time': [],
-        'weight': []
+        'weight': [],
+        'convergence': [],
+        'penalty_con': []
     }

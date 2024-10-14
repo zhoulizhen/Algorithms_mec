@@ -4,7 +4,7 @@ from Graph import FileReader as FR
 from Graph import ConnectMEC as GC
 from Compute import Accuracy
 from Offline import SC, RelaxILP, NonShare, NBSRound, NBSILP, App
-from Oline import OL, MAB, ADMS
+from Online import OL, MAB, ADMS
 import context
 from metrics import initialize_metrics
 from plot import plot_results
@@ -37,7 +37,7 @@ def run_experiment():
     usrnum = 300
 
     for num_models in iterations:
-
+        print("iterations", num_models)
         num_requests = usrnum * request_num_usr
         services = list(range(num_models // 5))
 

@@ -185,10 +185,7 @@ def OL(num_requests, num_models, num_features, requests, models, cloudlets, loca
             pull_delay = max(pullsh, pullre)
             queue_delay = Delay.get_queue_delay( requests[j], cloudlets)
             trans_delay = Delay.get_trans_delay(models[k], requests[j])
-            # print("pull_delay",pull_delay)
-            # print("queue_delay",queue_delay)
-            # print('inference_delay',inference_delay)
-            # print('trans_delay',trans_delay)
+
             delay = inference_delay + pull_delay + queue_delay + trans_delay
 
             accuracy = accuracy_dict[j][k]

@@ -3,7 +3,7 @@ import random
 from Graph import FileReader as FR
 from Graph import ConnectMEC as GC
 from Compute import Accuracy
-from Oline import OL, MAB, ADMS
+from Online import OL, MAB, ADMS
 
 import context
 from metrics import initialize_metrics
@@ -91,23 +91,20 @@ def run_experiment():
     adms_metrics['convergence'].append(adms_results[4])
     adms_metrics['penalty_con'].append(adms_results[5])
 
+    print("#-----------------------Convergence---------------------")
+    print("ol=", ol_metrics['convergence'][0]) # regret
+    print("mab=", mab_metrics['convergence'][0])
+    print("adms=", adms_metrics['convergence'][0])
+
+    print("#-----------------------Convergence_penalty---------------------")
+    print("ol=", ol_metrics['penalty_con'][0])
+    print("mab=", mab_metrics['penalty_con'][0])
+    print("adms=", adms_metrics['penalty_con'][0])
 
     from Plot import regret as R
     from Plot import penalty as P
-    R.regret_plot(ol_metrics['convergence'], mab_metrics['convergence'], adms_metrics['convergence'])
-    P.penalty_plot(ol_metrics['penalty_con'], mab_metrics['penalty_con'], adms_metrics['penalty_con'])
-
-    print("#-----------------------Convergence---------------------")
-    print("ol=", ol_metrics['convergence'])
-    print("mab=", mab_metrics['convergence'])
-    print("adms=", adms_metrics['convergence'])
-
-    print("#-----------------------Convergence_penalty---------------------")
-    print("ol=", ol_metrics['penalty_con'])
-    print("mab=", mab_metrics['penalty_con'])
-    print("adms=", adms_metrics['penalty_con'])
-
-
+    R.regret_plot(ol_metrics['convergence'][0], mab_metrics['convergence'][0], adms_metrics['convergence'][0])
+    P.penalty_plot(ol_metrics['penalty_con'][0], mab_metrics['penalty_con'][0], adms_metrics['penalty_con'][0])
 
 if __name__ == '__main__':
-    test1()
+    run_experiment()
