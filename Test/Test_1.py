@@ -45,7 +45,7 @@ def run_experiment():
     for clsnum in iterations:
         print("Iteration:", clsnum)
 
-        usrnum = 100
+        usrnum = 300
         num_requests = usrnum * request_num_usr
         services = list(range(num_models // 10))
 
@@ -77,11 +77,7 @@ def run_experiment():
 
         # ----------------------------- Offline Algorithms --------------------------------- #
         print("compute relaxilp")
-        relaxilp_results = RelaxILP.relaxILP(num_requests, num_models, num_locations,
-                                             requests, models, cloudlets,
-                                             locations, graph, accuracy_dict,
-                                             xi, alpha, locations_dict['lsh'],
-                                             locations_dict['lre'])
+        relaxilp_results = RelaxILP.relaxILP(num_requests, num_models, num_locations,requests, models, cloudlets, locations, graph, accuracy_dict, xi, alpha, locations_dict['lsh'], locations_dict['lre'])
 
         relax_ilp_metrics['accuracy'].append(relaxilp_results[0])
         relax_ilp_metrics['delay'].append(relaxilp_results[1])
@@ -237,9 +233,9 @@ def print_metrics(*metrics):
                     continue
 
                 if metric_key in metric:
-                    print(f"{alg}{metric_key}= {metric[metric_key]}")
+                    print(f"'{alg}': {metric[metric_key]}")
                 else:
-                    print(f"{alg}{metric_key}= N/A")
+                    print(f"'{alg}':{metric_key}= N/A")
 
     print_metrics_by_category(metrics, algorithms, metrics_to_print)
 
@@ -248,7 +244,7 @@ def plot_results(iterations, *metrics):
     """
     Plots the accuracy, delay, cost, and time results.
     """
-    algorithm_names = ['relaxILP', 'app', 'nbs', 'nonshare', 'sc', 'ol', 'mab', 'adms']
+    algorithm_names = ['LP', 'Appro', 'NBS', 'NonShare', 'SC', 'OL', 'MAB', 'ADMS']
     plt.figure(figsize=(12, 9), dpi=80)
 
     # Accuracy plot
