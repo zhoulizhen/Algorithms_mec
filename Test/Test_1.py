@@ -3,8 +3,8 @@ import random
 from Graph import FileReader as FR
 from Graph import ConnectMEC as GC
 from Compute import Accuracy
-from Algorithm import OL, MAB, ADMS, NBSRound, NBSILP, RelaxILP, App, SC, NonShare
-import matplotlib.pyplot as plt
+from Offline import SC, RelaxILP, NonShare, NBSRound, NBSILP, App
+from Oline import OL, MAB, ADMS
 import context
 from metrics import initialize_metrics
 from plot import plot_results
@@ -35,7 +35,6 @@ def run_experiment():
     feature_limit = num_features // 5
 
     for clsnum in iterations:
-        print("Iteration:", clsnum)
 
         usrnum = 300
         num_requests = usrnum * request_num_usr
@@ -69,7 +68,7 @@ def run_experiment():
 
         # ----------------------------- Offline Algorithms --------------------------------- #
         print("compute relaxilp")
-        relaxilp_results = RelaxILP.relaxILP(num_requests, num_models, num_locations,requests, models, cloudlets, locations, graph, accuracy_dict, xi, alpha, locations_dict['lsh'], locations_dict['lre'])
+        relaxilp_results = RelaxILP.relaxILP(num_requests, num_models, num_locations, requests, models, cloudlets, locations, graph, accuracy_dict, xi, alpha, locations_dict['lsh'], locations_dict['lre'])
 
         relax_ilp_metrics['accuracy'].append(relaxilp_results[0])
         relax_ilp_metrics['delay'].append(relaxilp_results[1])
@@ -88,10 +87,10 @@ def run_experiment():
 
 
         nbsilp_results = NBSILP.relaxILP(num_requests, num_models, num_locations,
-                                             requests, models, cloudlets,
-                                             locations, graph, accuracy_dict,
-                                             xi, alpha, locations_dict['lsh'],
-                                             locations_dict['lre'])
+                                         requests, models, cloudlets,
+                                         locations, graph, accuracy_dict,
+                                         xi, alpha, locations_dict['lsh'],
+                                         locations_dict['lre'])
 
         nbs_ilp_metrics['accuracy'].append(nbsilp_results[0])
         nbs_ilp_metrics['delay'].append(nbsilp_results[1])
@@ -99,9 +98,9 @@ def run_experiment():
         nbs_ilp_metrics['time'].append(nbsilp_results[3])
 
         nbs_results = NBSRound.nbs(num_requests, num_models, num_locations, *nbsilp_results[4:],
-                              requests, models, cloudlets, locations,
-                              graph, accuracy_dict,
-                              locations_dict['lsh'], locations_dict['lre'], nbsilp_results[3], alpha)
+                                   requests, models, cloudlets, locations,
+                                   graph, accuracy_dict,
+                                   locations_dict['lsh'], locations_dict['lre'], nbsilp_results[3], alpha)
 
         nbs_metrics['accuracy'].append(nbs_results[0])
         nbs_metrics['delay'].append(nbs_results[1])
@@ -118,7 +117,7 @@ def run_experiment():
         nonshare_metrics['cost'].append(nonshare_results[2])
         nonshare_metrics['time'].append(nonshare_results[3])
 
-        sc_results= SC.sc(num_requests, num_models, num_features, requests, models, cloudlets,locations, graph, accuracy_dict,locations_dict['lshnon'], locations_dict['lre'], alpha)
+        sc_results= SC.sc(num_requests, num_models, num_features, requests, models, cloudlets, locations, graph, accuracy_dict, locations_dict['lshnon'], locations_dict['lre'], alpha)
         sc_metrics['accuracy'].append(sc_results[0])
         sc_metrics['delay'].append(sc_results[1])
         sc_metrics['cost'].append(sc_results[2])

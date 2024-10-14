@@ -8,7 +8,7 @@ def initialize_model_locations(num_models, num_cloudlets, clsnum, models):
     lshnon = {}
 
     for k in range(1, num_models + 1):
-        num_po_locations = random.randint(1, clsnum // 10)  # Number of locations for model k
+        num_po_locations = random.randint(1, clsnum // 10)  # Number of locations for model k #todo: change the value: cloudlet:20, model:50
         lk = random.sample(range(1, num_cloudlets + 1), num_po_locations)
         lsh[k] = list(lk)  # Shared locations
         lre[k] = list(lk)  # Remaining locations

@@ -29,14 +29,15 @@ def run_experiment():
     random.seed(123)
 
     # Define parameters
-    iterations = [10,30,50,100,300,500]
-    num_models = 10
+    iterations = [10, 30, 50, 70, 90]
     request_num_usr = 1
     num_features = 100
     feature_limit = num_features // 5
     clsnum = 100
+    usrnum = 100
+    num_models = 100
 
-    for usrnum in iterations:
+    for t2 in iterations:
 
         num_requests = usrnum * request_num_usr
         services = list(range(num_models // 5))
@@ -46,7 +47,7 @@ def run_experiment():
         ues = GC.fineHomeCloudlet(cls, ues_old)
         models = GC.generateModels(num_models, services)
 
-        t2 = None
+        # t2 = None
         cloudlets, locations = GC.generateCloudlets(cls, ues, t2)
         graph = GC.connectNode(locations, ues)
 

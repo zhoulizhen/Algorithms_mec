@@ -29,14 +29,14 @@ def run_experiment():
     random.seed(123)
 
     # Define parameters
-    iterations = [10,30,50,100,300,500]
-    num_models = 10
+    iterations = [10, 30, 50, 70, 100]
     request_num_usr = 1
     num_features = 100
     feature_limit = num_features // 5
-    clsnum = 100
+    clsnum = 300
+    usrnum = 300
 
-    for usrnum in iterations:
+    for num_models in iterations:
 
         num_requests = usrnum * request_num_usr
         services = list(range(num_models // 5))

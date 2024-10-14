@@ -3,9 +3,7 @@ import random
 from Graph import FileReader as FR
 from Graph import ConnectMEC as GC
 from Compute import Accuracy
-from Algorithm import OL, MAB, ADMS, NBSRound, NBSILP, RelaxILP, App, SC, NonShare, RelaxNonlinear, Nonlinear, ILP
-import matplotlib.pyplot as plt
-import numpy as np
+from Oline import OL, ADMS
 
 
 def test1():
@@ -94,7 +92,7 @@ def test1():
 
     # -----------------------------online---------------------------------#
 
-    acco, delayo, costo, timeo,convergence,penalty_con,wightsum,featurelistol = OL.OL(num_requests, num_models, num_features, requests, models, cloudlets,locations, Graph, accuracy_dict, xi, contexts, feature_limit,alpha)
+    acco, delayo, costo, timeo,convergence,penalty_con,wightsum,featurelistol = OL.OL(num_requests, num_models, num_features, requests, models, cloudlets, locations, Graph, accuracy_dict, xi, contexts, feature_limit, alpha)
     # ol['convergence']=convergence
     # ol['penalty_con']=penalty_con
 
@@ -102,7 +100,7 @@ def test1():
     # mab['convergence']=convergencem
     # mab['penalty_con']=penalty_conm
 
-    accad, delayad, costad, timead,convergencead,penalty_conad,wightsum,featurelistad = ADMS.adms(num_requests, num_models, num_features, requests, models, cloudlets, locations, Graph, accuracy_dict, xi, contexts, feature_limit,alpha)
+    accad, delayad, costad, timead,convergencead,penalty_conad,wightsum,featurelistad = ADMS.adms(num_requests, num_models, num_features, requests, models, cloudlets, locations, Graph, accuracy_dict, xi, contexts, feature_limit, alpha)
 
     # adms['convergence']=convergencead
     # adms['penalty_con']=penalty_conad
@@ -119,7 +117,6 @@ def test1():
 
 
     import matplotlib.pyplot as plt
-    import numpy as np
 
     # feature_listol = [[i for i in range(num_requests)], [featurelistol[j] for j in range(1, num_requests+1)]]
     # feature_listad = [[i for i in range(num_requests)], [featurelistad[j] for j in range(1, num_requests + 1)]]
