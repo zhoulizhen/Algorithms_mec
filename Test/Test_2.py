@@ -6,18 +6,11 @@ from Compute import Accuracy
 from Algorithm import OL, MAB, ADMS, NBSRound, NBSILP, RelaxILP, App, SC, NonShare
 import matplotlib.pyplot as plt
 import context
+from metrics import initialize_metrics
+from plot import plot_results
+from results import print_metrics
+from preheat import initialize_model_locations
 
-def initialize_metrics():
-    """
-    Initializes a dictionary to store metrics for each algorithm.
-    """
-    return {
-        'accuracy': [],
-        'delay': [],
-        'cost': [],
-        'time': [],
-        'weight': []
-    }
 
 def run_experiment():
     # Set random seed for reproducibility
@@ -169,116 +162,8 @@ def run_experiment():
 
     plot_results(iterations, relax_ilp_metrics, app_metrics, nbs_metrics, nonshare_metrics, sc_metrics, ol_metrics, mab_metrics, adms_metrics)
 
-def initialize_model_locations(num_models, num_cloudlets, clsnum, models):
-    """
-    Initializes location dictionaries for each model, including parameter sharing and non-sharing.
-    """
-    lsh = {}
-    lre = {}
-    lshnon = {}
-
-    for k in range(1, num_models + 1):
-        num_po_locations = random.randint(1, clsnum // 10)  # Number of locations for model k
-        lk = random.sample(range(1, num_cloudlets + 1), num_po_locations)
-        lsh[k] = list(lk)  # Shared locations
-        lre[k] = list(lk)  # Remaining locations
-        lshnon[k] = list(lk)  # Non-shared locations
-
-    # Update shared locations based on service types
-    for k1 in range(1, num_models + 1):
-        lsh_copy = set(lsh[k1])  # Use set to avoid duplicates
-        for k2 in range(1, num_models + 1):
-            if models[k1]['service_type'] == models[k2]['service_type']:
-                lsh_copy.update(lsh[k2])
-        lsh[k1] = list(lsh_copy)
-    return {'lsh': lsh, 'lre': lre, 'lshnon': lshnon}
-
-def print_metrics(*metrics):
-    """
-    Prints the delay, accuracy, cost, time, and weight sum metrics for each algorithm.
-    """
-
-    algorithms = ['LP', 'Appro', 'NBS', 'NonShare', 'SC', 'OL', 'MAB', 'ADMS']
-
-    metrics_to_print = {
-        'delay': 'Delay',
-        'accuracy': 'Accuracy',
-        'cost': 'Cost',
-        'time': 'Time',
-        'weight': 'Weight Sum'
-    }
-
-    def print_metrics_by_category(metrics_list, algorithms_list, metrics_keys):
-        for metric_key, display_name in metrics_keys.items():
-            print(f"-----------------------{display_name}---------------------")
-            for i, alg in enumerate(algorithms_list):
-                if i >= len(metrics_list):
-                    print(f"Warning: No metrics available for {alg}.")
-                    continue
-
-                metric = metrics_list[i]
-
-                if metric_key == 'weight' and alg not in ['ol', 'mab', 'adms']:
-                    continue
-
-                if metric_key in metric:
-                    print(f"'{alg}': {metric[metric_key]}")
-                else:
-                    print(f"'{alg}':{metric_key}= N/A")
-
-    print_metrics_by_category(metrics, algorithms, metrics_to_print)
 
 
-def plot_results(iterations, *metrics):
-    """
-    Plots the accuracy, delay, cost, and time results.
-    """
-    algorithm_names = ['relaxILP', 'app', 'nbs', 'nonshare', 'sc', 'ol', 'mab', 'adms']
-    plt.figure(figsize=(12, 9), dpi=80)
-
-    # Accuracy plot
-    ax1 = plt.subplot(221)
-    for alg_name, metric in zip(algorithm_names, metrics):
-        plt.plot(iterations, metric['accuracy'], marker="v", label=f"{alg_name}")
-    plt.xlabel('Number of Cloudlets')
-    plt.ylabel('Accuracy')
-    plt.legend()
-
-    # Delay plot
-    ax2 = plt.subplot(222)
-    for alg_name, metric in zip(algorithm_names, metrics):
-        plt.plot(iterations, metric['delay'], marker="v", label=f"{alg_name}")
-    plt.xlabel('Number of Cloudlets')
-    plt.ylabel('Delay')
-    plt.legend()
-
-    # Cost plot
-    ax3 = plt.subplot(223)
-    for alg_name, metric in zip(algorithm_names, metrics):
-        plt.plot(iterations, metric['cost'], marker="v", label=f"{alg_name}")
-    plt.xlabel('Number of Cloudlets')
-    plt.ylabel('Cost')
-    plt.legend()
-
-    # Time plot
-    ax4 = plt.subplot(224)
-    for alg_name, metric in zip(algorithm_names, metrics):
-        plt.plot(iterations, metric['time'], marker="v", label=f"{alg_name}")
-    plt.xlabel('Number of Cloudlets')
-    plt.ylabel('Time')
-    plt.legend()
-
-
-    # Weight sum plot
-    ax5 = plt.subplot(224)
-    for alg_name, metric in zip(algorithm_names[5:], metrics[5:]):
-        plt.plot(iterations, metric['weight'], marker="v", label=f"{alg_name}")
-    plt.xlabel('Number of Cloudlets')
-    plt.ylabel('Weight Sum')
-    plt.legend()
-
-    plt.tight_layout()
-    plt.show()
 
 if __name__ == '__main__':
     run_experiment()
