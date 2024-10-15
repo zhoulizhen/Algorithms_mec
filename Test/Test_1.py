@@ -7,8 +7,8 @@ from Offline import SC, RelaxILP, NonShare, NBSRound, NBSILP, App
 from Online import OL, MAB, ADMS
 import context
 from metrics import initialize_metrics
-from plot import plot_results
-from results import print_metrics
+from Plot.plot import plot_results
+from Plot.results import print_metrics
 from preheat import initialize_model_locations
 
 def run_experiment():

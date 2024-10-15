@@ -3,7 +3,7 @@ from Compute import Delay, Cost
 import time
 
 def rand_pick(seq, probabilities):
-    x = random.uniform(0,0.6)
+    x = random.uniform(0,1)
     cumprob = 0.0
     item = 0
     for item, item_pro in zip(seq, probabilities):
