@@ -29,7 +29,7 @@ class GassuianDistribution:
 
 def OL(num_requests, num_models, num_features, requests, models, cloudlets, locations, Graph,accuracy_dict,xi,context,feature_limit,alpha):
 
-    penalty_baseline = random.uniform(100,300) # Todo: computing the penalty
+    penalty_baseline = random.uniform(100,300)
     threshold = 20
 
     # beta initialization
@@ -50,7 +50,7 @@ def OL(num_requests, num_models, num_features, requests, models, cloudlets, loca
     B = {}
     mu_hat = {}
     g = {}
-    v = 3  # Todo: update v
+    v = 3
     lsh = {}
     lre = {}
     for k in range(1, num_models + 1):
@@ -61,7 +61,6 @@ def OL(num_requests, num_models, num_features, requests, models, cloudlets, loca
         lsh[k] = []
         lre[k] = []
 
-    # gaussian_dict ={}
     sumcost = 0
     sumdelay = 0
     sumaccuracy = 0
@@ -69,7 +68,6 @@ def OL(num_requests, num_models, num_features, requests, models, cloudlets, loca
     convergence = []
     penalty_con = []
     weightsum = 0
-    model_loc_list = {}
     start1  = 0
     end1  = 0
     start = time.time()
@@ -107,7 +105,6 @@ def OL(num_requests, num_models, num_features, requests, models, cloudlets, loca
             theta = gaussian_dict[k].sample()
             sampled_theta[k] = theta
 
-            #------------------compute optimal penalty-------------------
             if lsh[k]:
                 pullshdelay = []
                 for l in lsh[k]:
@@ -128,29 +125,21 @@ def OL(num_requests, num_models, num_features, requests, models, cloudlets, loca
                 location_key = list(locations.keys())[-1]
                 pullre = Delay.get_pull_cloud_re(models[k], requests[j], location_key, Graph)
 
-            # Obtain the penalty
             inference_delay = Delay.get_inference_delay(models[k], requests[j], cloudlets)
             pull_delay = max(pullsh, pullre)
             queue_delay = Delay.get_queue_delay( requests[j], cloudlets)
             trans_delay = Delay.get_trans_delay(models[k], requests[j])
             delay = inference_delay + pull_delay + queue_delay + trans_delay
-
-            # accuracy = Accuracy.get_accuracy(models[k], requests[j])
             accuracy = accuracy_dict[j][k]
-
             cost = Cost.get_cost(models[k], requests[j], cloudlets, pull_delay, inference_delay, trans_delay)
-
             penalty = xi * (-np.log(accuracy)) + (1 - xi) * delay
             reward = 1 / penalty
             optimal[k] = penalty
         optimal_penalty = min(optimal.values())
         end1 = time.time()
-
         selected_model = min(sampled_theta, key=sampled_theta.get)
 
         if selected_model:
-            pulling_delay_sh = {}
-            pulling_delay_re = {}
             k = selected_model
             if lsh[k]:
                 pullshdelay = []
@@ -185,23 +174,16 @@ def OL(num_requests, num_models, num_features, requests, models, cloudlets, loca
             pull_delay = max(pullsh, pullre)
             queue_delay = Delay.get_queue_delay( requests[j], cloudlets)
             trans_delay = Delay.get_trans_delay(models[k], requests[j])
-
             delay = inference_delay + pull_delay + queue_delay + trans_delay
-
             accuracy = accuracy_dict[j][k]
-
             cost = Cost.get_cost(models[k], requests[j], cloudlets, pull_delay, inference_delay,trans_delay)
-
             sumcost += cost
             sumdelay += delay
             sumaccuracy += accuracy
             penalty = xi * (-np.log(accuracy)) + (1-xi) * delay
             reward = 1/ penalty
-
             sumpenalty += penalty
-
             weightsum += penalty
-
             B[k] += np.outer(b_d,b_d)
             g[k] += b_d.flatten() * penalty
             mu_hat[k] = np.linalg.solve(B[k], g[k])
@@ -210,6 +192,7 @@ def OL(num_requests, num_models, num_features, requests, models, cloudlets, loca
                 for l in selected_features:
                     n[l] = n[l] + 1
                     r[l] = r[l] + 1
+
             regret = penalty - optimal_penalty
             convergence.append(regret)
             penalty_con.append(penalty)
@@ -232,37 +215,25 @@ def draw(num_features, num_models, beta_dict, gaussian_dict):
         plt.subplot(2, 2, l)
         alpha1 = beta_dict[l].S
         beta1 = beta_dict[l].F
-        # x = sampled_mus[l]
         x = np.linspace(0,1,1000)
         pdf = beta.pdf(x,alpha1,beta1)
-        # plt.plot(x,pdf,'r-',lw=2, label=f'Feature {l},alpha={alpha1},beta={beta1}')
         plt.plot(x, pdf, 'r-', lw=2, label=f'Feature {l}')
-        # plt.xlabel('Sampled values')
-        # plt.ylabel('Probability density')
         plt.title('Beta Distribution', font1)
         plt.legend(prop=font1)
-        # legend = plt.legend(handles=[A], prop=font1, ncol=3, labelspacing=0.02, handlelength=1, handleheight=1, handletextpad=0.5, columnspacing=0.5, borderaxespad=0.1, borderpad=0.2)
         plt.grid(True)
-
     plt.figure(figsize=(12, 6))
 
     for k in range(1, num_models + 1):
         plt.subplot(2, 2, k)
         mean1 =  gaussian_dict[k].mean
         variance1 =  gaussian_dict[k].variance
-        # print("Gaussian distribution ~({},{})".format(mean1,variance1))
         x = np.linspace(-10, 500, 100)
         pdf = 1 / np.sqrt(2 * np.pi * variance1) * np.exp(
             -0.5 * ((x - mean1)** 2 / variance1) )
         pdf = np.squeeze(pdf)
-        # plt.plot(x, pdf, 'r-', lw=2, label=f'Feature {k},mean={mean1},variance={variance1}')
         plt.plot(x, pdf, 'r-', lw=2, label=f'Model {k}')
-
-        # plt.xlabel('Sampled values')
-        # plt.ylabel('Probability density')
         plt.title('Gaussian Distribution', font1)
         plt.legend(prop=font1)
         plt.grid(True)
-
     plt.tight_layout()
     plt.show()

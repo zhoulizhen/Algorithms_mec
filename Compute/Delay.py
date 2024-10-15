@@ -25,7 +25,7 @@ def get_pull_cloud_re(model, request, location, Graph):
 def get_trans_delay(model, request):
     rate = request['Transmission_rate']
     input_size = request['input_size']
-    out_size = input_size * model['size'] * random.uniform(0.1, 0.3) # todo: change the random.uniform(0.001, 0.01) to a constant
+    out_size = input_size * model['size'] * random.uniform(0.1, 0.3)
     trans_delay = input_size/rate + out_size/rate
     return trans_delay
 
@@ -49,9 +49,6 @@ def get_queue_delay(request, cloudlets):
     num_request = len(cloudlets[home_cloudlet_id]['home_requests'])
     if num_request == 0:
         return 0
-    # computing_capacity = cloudlets[home_cloudlet_id]['computing_capacity']
-    # service_rate = 0.1 * computing_capacity # TODO: is it correct? whether the service rate larger than arrival rate
-    # arrival_rate = 1 / num_request
     service_rate = cloudlets[home_cloudlet_id]['service_rate']
     arrival_rate = cloudlets[home_cloudlet_id]['arrival_rate']
     service_times = 1/ service_rate

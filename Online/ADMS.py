@@ -8,8 +8,8 @@ class LinearUCB:
     def __init__(self, n_features, n_arms, alpha, delta):
         self.n_features = n_features
         self.n_arms = n_arms
-        self.alpha = alpha # exploration parameter
-        self.delta = delta # LMMSE parameter
+        self.alpha = alpha
+        self.delta = delta
 
         self.A = [np.identity(n_features) for _ in range(n_arms)]
         self.b = [np.zeros((n_features, 1)) for _ in range(n_arms)]
@@ -18,7 +18,6 @@ class LinearUCB:
 
     def choose_action(self, context_vector,alpha):
         UCB_values = np.zeros(self.n_arms)
-        # context_vector = context_vector.reshape(-1, 1)
         for a in range(self.n_arms):
             x_t_a = context_vector
             theta_hat_a = self.theta_hat[a].reshape(-1, 1)
@@ -40,8 +39,7 @@ class LinearUCB:
 
 def adms(num_requests, num_models, num_features, requests, models, cloudlets,locations, Graph, accuracy_dict, xi,context,feature_limit,alpha):
 
-
-    alpha = 0.3 # todo: update alpha
+    alpha = 0.3
     delta = 1
     linear_ucb = LinearUCB(feature_limit, num_models, alpha, delta)
 
@@ -66,7 +64,6 @@ def adms(num_requests, num_models, num_features, requests, models, cloudlets,loc
         optimal = {}
         start1 = time.time()
         for k in range(1, num_models + 1):
-            # ------------------compute optimal penalty-------------------
             if lsh[k]:
                 pullshdelay = []
                 for l in lsh[k]:
@@ -87,34 +84,22 @@ def adms(num_requests, num_models, num_features, requests, models, cloudlets,loc
                 location_key = list(locations.keys())[-1]
                 pullre = Delay.get_pull_cloud_re(models[k], requests[j], location_key, Graph)
 
-            # Obtain the penalty
             inference_delay = Delay.get_inference_delay(models[k], requests[j], cloudlets)
             pull_delay = max(pullsh, pullre)
             queue_delay = Delay.get_queue_delay( requests[j], cloudlets)
             trans_delay = Delay.get_trans_delay(models[k], requests[j])
             delay = inference_delay + pull_delay + queue_delay + trans_delay
-
-            # accuracy = Accuracy.get_accuracy(models[k], requests[j])
             accuracy = accuracy_dict[j][k]
-
-            cost = Cost.get_cost(models[k], requests[j], cloudlets, pull_delay, inference_delay, trans_delay)
-
-            # penalty = xi * 1 / accuracy + (1 - xi) * delay
             penalty = xi * (-np.log(accuracy)) + (1 - xi) * delay
-            # print("penalty-OL", penalty)
-            reward = 1 / penalty
             optimal[k] = penalty
         optimal_penalty = min(optimal.values())
-
         end1 = time.time()
-
         selected_features = random.sample(range(0, num_features), feature_limit)
         featurelist[j] = []
         for f in selected_features:
             featurelist[j].append(f)
         context_vector = context[j-1][selected_features]
         context_vector = context_vector.reshape(-1, 1)
-
         model_id = linear_ucb.choose_action(context_vector,alpha)
 
         if model_id:
@@ -139,26 +124,19 @@ def adms(num_requests, num_models, num_features, requests, models, cloudlets,loc
             lsh[k].append(requests[j]['home_cloudlet_id'])
             lre[k].append(requests[j]['home_cloudlet_id'])
 
-            # Obtain the penalty
             inference_delay = Delay.get_inference_delay(models[k], requests[j], cloudlets)
             pull_delay = max(pulling_delay_sh, pulling_delay_re)
             queue_delay = Delay.get_queue_delay( requests[j], cloudlets)
             trans_delay = Delay.get_trans_delay(models[k], requests[j])
             delay = inference_delay + pull_delay + queue_delay + trans_delay
-
             accuracy = accuracy_dict[j][k]
-
             cost = Cost.get_cost(models[k], requests[j], cloudlets, pull_delay, inference_delay, trans_delay)
-
             sumcost += cost
             sumdelay += delay
             sumaccuracy += accuracy
-
             penalty = xi * (-np.log(accuracy)) + (1 - xi) * delay
             reward = 1 / penalty
-
             linear_ucb.update_parameters(model_id, context_vector, reward)
-
             regret = penalty - optimal_penalty
             convergence.append(regret)
             penalty_con.append(penalty)

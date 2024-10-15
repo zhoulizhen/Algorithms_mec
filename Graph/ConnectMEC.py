@@ -86,7 +86,6 @@ def generateRequests(cls,ues,num, services,accuracy_constraint,cost_constraint,c
             requests[count] = info
             if home_cloudlet_id in cloudlets.keys():
                 cloudlets[home_cloudlet_id]['home_requests'].append(count)
-    print("There are {} requests.".format(len(requests)))
     return requests
 
 def generateCloudlets(cls, ues,computing_constraint):
@@ -110,7 +109,7 @@ def generateCloudlets(cls, ues,computing_constraint):
             'service_rate': PS.service_rate(),
             'arrival_rate': PS.arrival_rate()
         }
-        cloudlets[i] = info # Todo: this should be locations consists of cloud and cloudlets.
+        cloudlets[i] = info
     locations = copy.copy(cloudlets)
     locations[cl_count+1] = {
             'id': cl_count+1,
@@ -124,7 +123,7 @@ def generateCloudlets(cls, ues,computing_constraint):
             'home_requests': [],
             'service_times': []
         }
-    print("Thre are {} locations".format(len(locations)))
+    # print("Thre are {} locations".format(len(locations)))
     return cloudlets,locations
 
 def generateModels(num_models, services):
@@ -140,5 +139,5 @@ def generateModels(num_models, services):
         info['shareable'] = PS.shareable_subset(info['size'])
         info['remain'] = PS.remaining_subset(info['size'], info['shareable'])
         models[i] = info
-    print("There are {} models.".format(len(models)))
+    # print("There are {} models.".format(len(models)))
     return models

@@ -46,11 +46,7 @@ def relaxILP(num_requests, num_models, requests, models, cloudlets, accuracy_dic
     x_solution = np.array([[x[j, k].X for k in range(1, num_models + 1)] for j in range(1, num_requests + 1)])
     y_solution = np.array([y[k].X for k in range(1, num_models + 1)])
 
-    print("Model selection (xij):", x_solution)
-    print("Resource provisioning (yj):", y_solution)
-
     end = time.time()
-    print("Optimization time:", end - start)
 
 
 # Example usage

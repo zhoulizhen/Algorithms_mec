@@ -1,6 +1,5 @@
-#----------request---------------#
-import random
 
+import random
 
 def number_of_instructions(): return random.randint(50,100)
 
@@ -18,49 +17,36 @@ def accuracy_requirement(accuracy_constraint):
     else:
         return random.uniform(0.1,0.4)
 
-def input_data_size(): return random.uniform(0.09,0.5) # GB #todo: reference
-
-#----------cloudlet---------------#
-import random
+def input_data_size(): return random.uniform(0.09,0.5)
 
 def computing_capacity(computing_constraint):
     if computing_constraint:
         return computing_constraint
     else:
-        return random.randint(8, 24)  # GB
+        return random.randint(8, 24)
 
-def peak_power(): return random.uniform(0.8,2.5) # Watt
+def peak_power(): return random.uniform(0.8,2.5)
 
-def idle_power(): return random.uniform(0.1,0.3) # Watt
+def idle_power(): return random.uniform(0.1,0.3)
 
-def leak_power(): return random.uniform(0.1,0.3) # Watt
+def leak_power(): return random.uniform(0.1,0.3)
 
-def trans_power(): return random.uniform(0.8,2.5) # Watt
+def trans_power(): return random.uniform(0.8,2.5)
 
-def service_rate(): return random.uniform(0.5,0.9) # GB
+def service_rate(): return random.uniform(0.5,0.9)
 
-def arrival_rate(): return random.uniform(0.1,0.5) # GB
+def arrival_rate(): return random.uniform(0.1,0.5)
 
-#---------------models-------------------#
-
-
-def shareable_subset(size): return size*2/3 # Set the shareble subset takes 2/3 of model size
+def shareable_subset(size): return size*2/3
 
 def remaining_subset(size, shareble_size): return size-shareble_size
 
-def model_size(): return random.uniform(5, 20) # GB
-def float_operations(): return random.uniform(100, 300) # TFLOPS
+def model_size(): return random.uniform(5, 20)
+def float_operations(): return random.uniform(100, 300)
 def accessing_rate(): return random.uniform(0.1,0.5)
 
-def processing_rate(): return random.uniform(107,312) # TFLOPS
+def processing_rate(): return random.uniform(107,312)
 
-# inference delay 计算出来的是1Gb --> second，
-#---------------edge-------------------#
-def link_delay(): return random.uniform(5,10) # s
-#todo: actually, this has to be ms, but really situation is more larger than this, so we just use s
+def link_delay(): return random.uniform(5,10)
 
-# todo: the real value should be 30-50ms, but we just use 5-10s to balance the inference delay and pulling delay
-
-def cloud_delay(): return random.uniform(10,20) # s
-
-# todo: second \ TFLOPS \GB \Watt
+def cloud_delay(): return random.uniform(10,20)

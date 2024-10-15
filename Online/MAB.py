@@ -13,7 +13,6 @@ class EpsilonGreedyBandit:
     def choose_action(self):
         if np.random.rand() < self.epsilon:
             action = np.random.choice(list(self.action_counts.keys()))
-            # print("action",action)
             return action
         else:
             max_q_value = max(self.q_values.values())
@@ -23,9 +22,6 @@ class EpsilonGreedyBandit:
     def update(self, action, reward):
         self.action_counts[action] += 1
         self.q_values[action] += (reward - self.q_values[action]) / self.action_counts[action]
-        # print("action",action)
-        # print("reward",reward)
-        # print("q_values",self.q_values[action])
 
 
 def mab(num_requests, num_models, num_features, requests, models, cloudlets,locations, Graph, accuracy_dict,xi,feature_limit,alpha):
@@ -53,8 +49,6 @@ def mab(num_requests, num_models, num_features, requests, models, cloudlets,loca
         optimal = {}
         start1 = time.time()
         for k in range(1, num_models + 1):
-            #------------------compute optimal penalty-------------------
-            # pull model
             if lsh[k]:
                 pullshdelay = []
                 for l in lsh[k]:
@@ -75,19 +69,13 @@ def mab(num_requests, num_models, num_features, requests, models, cloudlets,loca
                 location_key = list(locations.keys())[-1]
                 pullre = Delay.get_pull_cloud_re(models[k], requests[j], location_key, Graph)
 
-
-            # Obtain the penalty
             inference_delay = Delay.get_inference_delay(models[k], requests[j], cloudlets)
             pull_delay = max(pullsh, pullre)
             queue_delay = Delay.get_queue_delay(requests[j], cloudlets)
             trans_delay = Delay.get_trans_delay(models[k], requests[j])
             delay = inference_delay + pull_delay + queue_delay + trans_delay
-
-            # accuracy = Accuracy.get_accuracy(models[k], requests[j])
             accuracy = accuracy_dict[j][k]
-            cost = Cost.get_cost(models[k], requests[j], cloudlets, pull_delay, inference_delay, trans_delay)
             penalty = xi * (-np.log(accuracy)) + (1 - xi) * delay
-            reward = 1 / penalty
             optimal[k] = penalty
         optimal_penalty = min(optimal.values())
 
@@ -115,25 +103,20 @@ def mab(num_requests, num_models, num_features, requests, models, cloudlets,loca
             lsh[k].append(requests[j]['home_cloudlet_id'])
             lre[k].append(requests[j]['home_cloudlet_id'])
 
-            # Obtain the penalty
             inference_delay = Delay.get_inference_delay(models[k], requests[j], cloudlets)
             pull_delay = max(pulling_delay_sh, pulling_delay_re)
             queue_delay = Delay.get_queue_delay( requests[j], cloudlets)
             trans_delay = Delay.get_trans_delay(models[k], requests[j])
             delay = inference_delay + pull_delay + queue_delay + trans_delay
 
-            # accuracy = Accuracy.get_accuracy(models[k], requests[j])
             accuracy = accuracy_dict[j][k]
             cost = Cost.get_cost(models[k], requests[j], cloudlets, pull_delay, inference_delay, trans_delay)
-
             sumcost += cost
             sumdelay += delay
             sumaccuracy += accuracy
-
             penalty = xi * (-np.log(accuracy)) + (1-xi) * delay
             reward = 1/penalty
             bandit.update(model_id, reward)
-
             regret = penalty - optimal_penalty
             convergence.append(regret)
             penalty_con.append(penalty)

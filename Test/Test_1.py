@@ -28,14 +28,14 @@ def run_experiment():
     random.seed(123)
 
     # Define parameters
-    iterations = [30,50,100,300,500]
+    iterations = [30,50]
     num_models = 10
     request_num_usr = 1
     num_features = 100
     feature_limit = num_features // 5
 
     for clsnum in iterations:
-
+        print(f'Running experiment for {clsnum} iterations')
         usrnum = 300
         num_requests = usrnum * request_num_usr
         services = list(range(num_models // 10))
@@ -59,15 +59,13 @@ def run_experiment():
         accuracy_dict = Accuracy.get_accuracy(models, requests)
         contexts = context.generate_context(num_requests, num_features)
 
-        xi = 0.98
-        # xi = random.uniform(0, 1) # todo: change the value of xi
+        xi = random.uniform(0, 1)
         alpha = random.uniform(0, 1)
 
         # Initialize location dictionaries
         locations_dict = initialize_model_locations(num_models, num_cloudlets, clsnum, models)
 
         # ----------------------------- Offline Algorithms --------------------------------- #
-        print("compute relaxilp")
         relaxilp_results = RelaxILP.relaxILP(num_requests, num_models, num_locations, requests, models, cloudlets, locations, graph, accuracy_dict, xi, alpha, locations_dict['lsh'], locations_dict['lre'])
 
         relax_ilp_metrics['accuracy'].append(relaxilp_results[0])
