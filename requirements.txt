@@ -1,0 +1,7 @@
+matplotlib~=3.8.0
+numpy~=1.26.4
+selenium~=3.141.0
+pandas~=2.2.1
+networkx~=3.1
+scipy~=1.11.3
+folium~=0.14.0
