@@ -72,4 +72,4 @@ def app(num_requests,num_models,num_locations,x,y_sh,y_re,requests, models, clou
     end = time.time()
     sumtime = end-start
 
-    return sumaccuracy/num_requests, sumdelay, sumcost/num_requests,sumtime
+    return sumaccuracy/num_requests, sumdelay, sumcost/num_requests, sumtime

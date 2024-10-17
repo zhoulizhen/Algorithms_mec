@@ -1,5 +1,4 @@
 import random
-
 from Graph import FileReader as FR
 from Graph import ConnectMEC as GC
 from Compute import Accuracy
@@ -65,7 +64,6 @@ def run_experiment():
         # Initialize location dictionaries
         locations_dict = initialize_model_locations(num_models, num_cloudlets, clsnum, models)
 
-        # ----------------------------- Offline Algorithms --------------------------------- #
         relaxilp_results = RelaxILP.relaxILP(num_requests, num_models, num_locations, requests, models, cloudlets, locations, graph, accuracy_dict, xi, alpha, locations_dict['lsh'], locations_dict['lre'])
 
         relax_ilp_metrics['accuracy'].append(relaxilp_results[0])
@@ -82,7 +80,6 @@ def run_experiment():
         app_metrics['delay'].append(app_results[1])
         app_metrics['cost'].append(app_results[2])
         app_metrics['time'].append(app_results[3])
-
 
         nbsilp_results = NBSILP.relaxILP(num_requests, num_models, num_locations,
                                          requests, models, cloudlets,
@@ -121,7 +118,6 @@ def run_experiment():
         sc_metrics['cost'].append(sc_results[2])
         sc_metrics['time'].append(sc_results[3])
 
-        # ----------------------------- Online Algorithms --------------------------------- #
         ol_results = OL.OL(num_requests, num_models, num_features, requests,
                            models, cloudlets, locations,
                            graph, accuracy_dict, xi, contexts,
@@ -159,6 +155,3 @@ def run_experiment():
 
     plot_results(iterations, relax_ilp_metrics, app_metrics, nbs_metrics, nonshare_metrics, sc_metrics, ol_metrics, mab_metrics, adms_metrics)
 
-
-if __name__ == '__main__':
-    run_experiment()

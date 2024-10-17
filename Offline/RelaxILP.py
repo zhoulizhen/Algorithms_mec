@@ -118,5 +118,5 @@ def relaxILP(num_requests, num_models, num_locations, requests, models, cloudlet
     y_sh_values = {(j, k, l): y_sh[j, k, l].X for j in range(1, num_requests + 1) for k in range(1, num_models + 1) for l in lsh[k]}
     y_re_values = {(j, k, l): y_re[j, k, l].X for j in range(1, num_requests + 1) for k in range(1, num_models + 1) for l in lre[k]}
 
-    return accuracy / num_requests, delay, cost / num_requests,sumtime, x_values,y_sh_values,y_re_values
+    return accuracy / num_requests, delay, cost / num_requests, sumtime, x_values, y_sh_values, y_re_values
 

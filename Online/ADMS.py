@@ -1,9 +1,8 @@
 import random
-
 import numpy as np
 from Compute import Delay, Cost
 import time
-# 定义 Linear UCB 类
+
 class LinearUCB:
     def __init__(self, n_features, n_arms, alpha, delta):
         self.n_features = n_features
@@ -60,7 +59,6 @@ def adms(num_requests, num_models, num_features, requests, models, cloudlets,loc
     start = time.time()
     featurelist = {}
     for j in range(1,num_requests+1):
-
         optimal = {}
         start1 = time.time()
         for k in range(1, num_models + 1):
@@ -146,4 +144,4 @@ def adms(num_requests, num_models, num_features, requests, models, cloudlets,loc
     timeo = end1 - start1
     sumtime = end - start - timeo
 
-    return sumaccuracy / num_requests, sumdelay, sumcost / num_requests, sumtime,convergence,penalty_con,weightsum,featurelist
+    return sumaccuracy / num_requests, sumdelay, sumcost / num_requests, sumtime,convergence, penalty_con, weightsum, featurelist

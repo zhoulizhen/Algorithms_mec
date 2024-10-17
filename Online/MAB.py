@@ -23,7 +23,6 @@ class EpsilonGreedyBandit:
         self.action_counts[action] += 1
         self.q_values[action] += (reward - self.q_values[action]) / self.action_counts[action]
 
-
 def mab(num_requests, num_models, num_features, requests, models, cloudlets,locations, Graph, accuracy_dict,xi,feature_limit,alpha):
 
     lsh = {}
@@ -78,9 +77,8 @@ def mab(num_requests, num_models, num_features, requests, models, cloudlets,loca
             penalty = xi * (-np.log(accuracy)) + (1 - xi) * delay
             optimal[k] = penalty
         optimal_penalty = min(optimal.values())
-
         end1 = time.time()
-        model_id = bandit.choose_action() # choose model
+        model_id = bandit.choose_action()
         if model_id:
             pulling_delay_sh = 0
             pulling_delay_re = 0
@@ -126,4 +124,4 @@ def mab(num_requests, num_models, num_features, requests, models, cloudlets,loca
     timeo = end1-start1
     sumtime = end-start- timeo
 
-    return sumaccuracy/num_requests, sumdelay, sumcost/num_requests,sumtime,convergence,penalty_con,weightsum,featurelist
+    return sumaccuracy/num_requests, sumdelay, sumcost/num_requests, sumtime, convergence, penalty_con,weightsum, featurelist

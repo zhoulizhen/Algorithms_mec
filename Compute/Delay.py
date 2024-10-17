@@ -1,5 +1,4 @@
 import random
-
 import numpy as np
 
 def get_pulling_delay_sh(model, request, location_sh, Graph):

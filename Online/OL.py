@@ -83,15 +83,13 @@ def OL(num_requests, num_models, num_features, requests, models, cloudlets, loca
             sampled_mus[l] = mu
         sorted_features = sorted(sampled_mus.keys(), key=lambda x: sampled_mus[x], reverse=True)
         selected_features = sorted_features[:feature_limit]
-
-        selected_features_copy = np.array(selected_features).reshape(-1, 1)  # 5*1
+        selected_features_copy = np.array(selected_features).reshape(-1, 1)
         featurelist[j] = []
         b_d = []
         for f_index in selected_features_copy:
             b_d.append(context[j-1][f_index-1])
             featurelist[j].append(f_index.tolist()[0])
         b_d = np.array(b_d).reshape(-1, 1)
-
 
         "arm selection function"
         sampled_theta = {}  # store the theta value
@@ -101,7 +99,6 @@ def OL(num_requests, num_models, num_features, requests, models, cloudlets, loca
         for k in range(1, num_models + 1):
 
             gaussian_dict[k] = GassuianDistribution(b_d, B[k], mu_hat[k], v)
-
             theta = gaussian_dict[k].sample()
             sampled_theta[k] = theta
 
