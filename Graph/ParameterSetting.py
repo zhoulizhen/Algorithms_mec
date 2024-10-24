@@ -1,13 +1,13 @@
 
 import random
 
-def number_of_instructions(): return random.randint(50,100)
+def number_of_instructions(): return random.randint(10,30)
 
 def cost_budget(cost_constraint):
     if cost_constraint:
         return cost_constraint
     else:
-        return random.uniform(30000,50000)
+        return random.uniform(1000,3000)
 
 def service_type(services): return random.choice(services)
 
@@ -23,7 +23,7 @@ def computing_capacity(computing_constraint):
     if computing_constraint:
         return computing_constraint
     else:
-        return random.randint(8, 24)
+        return random.randint(24, 80)
 
 def peak_power(): return random.uniform(0.8,2.5)
 
