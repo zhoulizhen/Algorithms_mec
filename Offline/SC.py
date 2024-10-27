@@ -23,17 +23,13 @@ def sc(num_requests, num_models, num_features, requests, models, cloudlets,locat
 
             location_key = list(locations.keys())[-1]
             pulling_delay_sh = Delay.get_pull_cloud_sh(models[k], requests[j], location_key, Graph)
-
             pulling_delay_re = Delay.get_pull_cloud_re(models[k], requests[j], location_key, Graph)
-
             inference_delay = Delay.get_inference_delay(models[k], requests[j], cloudlets)
             pull_delay = max(pulling_delay_sh, pulling_delay_re)
             queue_delay = Delay.get_queue_delay( requests[j], cloudlets)
             trans_delay = Delay.get_trans_delay(models[k], requests[j])
-
             delay = inference_delay + pull_delay + queue_delay + trans_delay
             cost = Cost.get_cost(models[k], requests[j], cloudlets, pull_delay, inference_delay, trans_delay)
-
             sumcost += cost
             sumdelay += delay
 

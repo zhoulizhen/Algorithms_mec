@@ -1,13 +1,13 @@
 
 import random
 
-def number_of_instructions(): return random.randint(10,30)
+def number_of_instructions(): return random.randint(50,100)
 
 def cost_budget(cost_constraint):
     if cost_constraint:
         return cost_constraint
     else:
-        return random.uniform(1000,3000)
+        return random.uniform(30000,50000)
 
 def service_type(services): return random.choice(services)
 
@@ -23,7 +23,7 @@ def computing_capacity(computing_constraint):
     if computing_constraint:
         return computing_constraint
     else:
-        return random.randint(24, 80)
+        return random.randint(8, 24)
 
 def peak_power(): return random.uniform(0.8,2.5)
 
@@ -42,7 +42,9 @@ def shareable_subset(size): return size*2/3
 def remaining_subset(size, shareble_size): return size-shareble_size
 
 def model_size(): return random.uniform(5, 20)
+
 def float_operations(): return random.uniform(100, 300)
+
 def accessing_rate(): return random.uniform(0.1,0.5)
 
 def processing_rate(): return random.uniform(107,312)

@@ -89,7 +89,6 @@ def relaxILP(num_requests, num_models, num_locations, requests, models, cloudlet
     delay = 0
     cost = 0
     infdelay = 0
-
     for j in range(1, num_requests + 1):
         for k in range(1, num_models + 1):
             inf_decision = x[j, k].X

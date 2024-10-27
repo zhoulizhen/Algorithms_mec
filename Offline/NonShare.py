@@ -43,13 +43,9 @@ def nonshare(num_requests, num_models, num_features, requests, models, cloudlets
 
             inference_delay = Delay.get_inference_delay(models[k], requests[j], cloudlets)
             pull_delay = max(pullsh, pullre)
-
             queue_delay = Delay.get_queue_delay( requests[j], cloudlets)
-
             trans_delay = Delay.get_trans_delay(models[k], requests[j])
-
             delay = inference_delay + pull_delay + queue_delay + trans_delay
-
             cost = Cost.get_cost(models[k], requests[j], cloudlets, pull_delay, inference_delay, trans_delay)
 
             sumcost += cost

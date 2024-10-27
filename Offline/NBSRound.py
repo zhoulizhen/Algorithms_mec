@@ -51,21 +51,13 @@ def nbs(num_requests,num_models,num_locations,x,y_sh,y_re,requests, models, clou
         sumaccuracy += acc
 
         pulling_delay_sh = Delay.get_pulling_delay_sh(models[model_id], requests[j], locations[pull_sh_id], Graph)
-
         pulling_delay_re = Delay.get_pulling_delay_re(models[model_id], requests[j], locations[pull_re_id], Graph)
-
         pull_delay = max(pulling_delay_sh, pulling_delay_re)
-
         inference_delay = Delay.get_inference_delay(models[model_id], requests[j], cloudlets)
-
         queue_delay = Delay.get_queue_delay( requests[j], cloudlets)
-
         trans_delay = Delay.get_trans_delay(models[model_id], requests[j])
-
         sumdelay += inference_delay + pull_delay + queue_delay + trans_delay
-
         cost = Cost.get_cost(models[model_id], requests[j], cloudlets, pull_delay, inference_delay, trans_delay)
-
         sumcost += cost
 
     end = time.time()
